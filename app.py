@@ -14,11 +14,10 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics.pairwise import cosine_similarity
 import pdfplumber
 import io
+import os
 
-# Ensure NLTK resources are available (for deployment, these might need to be downloaded once)
-nltk.download('stopwords', quiet=True)
-nltk.download('wordnet', quiet=True)
-nltk.download('omw-1.4', quiet=True)
+# Configure NLTK to use the locally bundled data
+os.environ['NLTK_DATA'] = 'nltk_data'
 
 # Initialize NLTK components globally to avoid re-initialization in functions
 stop_words = set(stopwords.words('english'))
@@ -35,7 +34,7 @@ def load_artifacts():
         tfidf_vectorizer = pickle.load(file)
     with open(model_path + 'logistic_regression_model.pkl', 'rb') as file:
         logistic_model = pickle.load(file)
-    
+
     return le, tfidf_vectorizer, logistic_model
 
 le, tfidf_vectorizer, classification_model = load_artifacts()
@@ -108,7 +107,7 @@ def rank_candidate(job_description_text, candidate_raw_resume_text, desired_job_
     extracted_skills = extract_skills(cleaned_resume_text, common_skills)
     missing_skills = calculate_skill_gap(extracted_skills, job_relevant_skills)
     category_relevance_score = 1 if predicted_category.lower() == desired_job_category.lower() else 0
-    
+
     matching_relevant_skills_count = len(set(job_relevant_skills).intersection(set(extracted_skills)))
     skill_score = matching_relevant_skills_count / len(job_relevant_skills) if len(job_relevant_skills) > 0 else 0
 
@@ -440,7 +439,7 @@ if "processed_resumes" in st.session_state and st.session_state.processed_resume
         df_rankings = df_rankings.drop(columns=['Ranking Score (Numeric)'])
 
         st.dataframe(df_rankings, use_container_width=True)
-        
+
         st.subheader("Detailed Analysis for Each Candidate")
         for resume_data_in_expander in st.session_state.processed_resumes:
             file_name = resume_data_in_expander['file_name']
