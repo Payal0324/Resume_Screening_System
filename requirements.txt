@@ -1,0 +1,5 @@
+nltk==3.9.1
+pandas==2.2.2
+pdfplumber
+scikit-learn==1.6.1
+streamlit
