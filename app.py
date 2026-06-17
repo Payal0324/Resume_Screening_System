@@ -308,11 +308,11 @@ text-align:center;
 color:white;
 margin-bottom:20px;
 ">
-<h1>🤖 AI-Powered Resume Screening and Candidate Ranking System</h1>
+<h1>AI-Powered Resume Screening and Candidate Ranking System</h1>
 <p>Upload Resumes • Analyze Skills • Rank Candidates Instantly</p>
 </div>
 """, unsafe_allow_html=True)
-st.markdown("## 📌 About this App")
+st.markdown("## 🚀 About this App")
 st.write("This application helps recruiters efficiently screen and rank job applicants based on job descriptions and resumes.")
 st.divider()
 
