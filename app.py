@@ -10,8 +10,6 @@ except Exception as e:
     st.error(f"NLTK ERROR: {e}")
     st.stop()
 
-from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import LabelEncoder
 from sklearn.linear_model import LogisticRegression
@@ -22,11 +20,22 @@ import pdfplumber
 import io
 import os
 
-# Configure NLTK to use the locally bundled data
-os.environ['NLTK_DATA'] = 'nltk_data'
-
 # Initialize NLTK components globally to avoid re-initialization in functions
-stop_words = set(stopwords.words('english'))
+import nltk
+
+nltk.download('stopwords', quiet=True)
+nltk.download('wordnet', quiet=True)
+nltk.download('omw-1.4', quiet=True)
+
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+
+try:
+    stop_words = set(stopwords.words('english'))
+except LookupError:
+    nltk.download('stopwords', quiet=True)
+    stop_words = set(stopwords.words('english'))
+
 lemmatizer = WordNetLemmatizer()
 
 # --- Load Models and Vectorizer with caching ---
