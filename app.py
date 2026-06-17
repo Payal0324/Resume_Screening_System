@@ -3,7 +3,13 @@ import streamlit as st
 import pandas as pd
 import pickle
 import re
-import nltk
+try:
+    import nltk
+    st.write("NLTK imported successfully")
+except Exception as e:
+    st.error(f"NLTK ERROR: {e}")
+    st.stop()
+
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from sklearn.feature_extraction.text import TfidfVectorizer
