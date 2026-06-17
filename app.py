@@ -5,7 +5,6 @@ import pickle
 import re
 try:
     import nltk
-    st.write("NLTK imported successfully")
 except Exception as e:
     st.error(f"NLTK ERROR: {e}")
     st.stop()
@@ -358,7 +357,7 @@ with col2:
     desired_job_category = st.text_input("Desired Job Category")
     job_relevant_skills_input = st.text_area("Relevant Skills (comma-separated)")
 
-with cols1:
+with col1:
     job_description = st.text_area(
         "Paste the Job Description here:",
         height=300,
@@ -366,7 +365,7 @@ with cols1:
         help="Enter the full text of the job description for analysis."
     )
 
-with cols2:
+with col2:
     st.write("### ") # Spacer to align inputs
     desired_job_category = st.text_input(
         "Enter the Desired Job Category:",
