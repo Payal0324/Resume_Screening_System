@@ -344,49 +344,41 @@ To deploy this application publicly using Streamlit Cloud, follow these steps:
 # Main content area for job description input
 st.markdown("## 📌 Job Description Input")
 
-# Use st.columns for better layout of input fields
 col1, col2 = st.columns([3, 2])
 
 with col1:
     job_description = st.text_area(
-        "Paste Job Description",
-        height=250
-    )
-
-with col2:
-    desired_job_category = st.text_input("Desired Job Category")
-    job_relevant_skills_input = st.text_area("Relevant Skills (comma-separated)")
-
-with col1:
-    job_description = st.text_area(
-        "Paste the Job Description here:",
+        "Job Description",
         height=300,
         key="job_description_input",
         help="Enter the full text of the job description for analysis."
     )
 
 with col2:
-    st.write("### ") # Spacer to align inputs
     desired_job_category = st.text_input(
-        "Enter the Desired Job Category:",
+        "Job Category",
         key="desired_job_category_input",
-        help="e.g., 'Data Science', 'Engineering'. This helps in classifying resumes accurately."
-    )
-    job_relevant_skills_input = st.text_area(
-        "Enter Job Relevant Skills (comma-separated):",
-        key="job_relevant_skills_input",
-        help="Provide a comma-separated list of essential skills for the job."
+        help="e.g., Data Science, Engineering"
     )
 
-# Process Job Description button
+    job_relevant_skills_input = st.text_area(
+        "Relevant Skills (comma-separated)",
+        key="job_relevant_skills_input",
+        help="Provide essential skills for the job"
+    )
+
 if st.button("Process Job Description", key="process_job_desc_button"):
     if job_description and desired_job_category and job_relevant_skills_input:
         st.session_state.job_description = job_description
         st.session_state.desired_job_category = desired_job_category
-        st.session_state.job_relevant_skills = [s.strip().lower() for s in job_relevant_skills_input.split(',') if s.strip()]
+        st.session_state.job_relevant_skills = [
+            s.strip().lower()
+            for s in job_relevant_skills_input.split(',')
+            if s.strip()
+        ]
         st.success("Job Description processed successfully!")
     else:
-        st.warning("Please fill in all fields (Job Description, Desired Job Category, and Job Relevant Skills) to process.")
+        st.warning("Please fill in all fields.")
 
 
 # --- Resume Upload and Processing ---
