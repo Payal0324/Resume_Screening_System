@@ -1,4 +1,4 @@
-# 📊 AI Resume Screening & Candidate Ranking System
+# 📊 AI Powered Resume Screening & Candidate Ranking System
 
 A machine learning-powered web application that automatically screens resumes, extracts skills, matches candidates with job descriptions, and ranks them based on relevance using NLP techniques.
 
