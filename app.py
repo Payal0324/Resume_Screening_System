@@ -299,8 +299,19 @@ h1, h2, h3, h4, h5, h6 {
 """
 st.markdown(custom_css, unsafe_allow_html=True)
 
-st.title("AI-Powered Resume Screening and Candidate Ranking System")
-st.markdown("---")
+st.markdown("""
+<div style="
+background: linear-gradient(90deg,#2563eb,#06b6d4);
+padding:25px;
+border-radius:15px;
+text-align:center;
+color:white;
+margin-bottom:20px;
+">
+<h1>🤖 AI-Powered Resume Screening and Candidate Ranking System</h1>
+<p>Upload Resumes • Analyze Skills • Rank Candidates Instantly</p>
+</div>
+""", unsafe_allow_html=True)
 st.markdown("## 📌 About this App")
 st.write("This application helps recruiters efficiently screen and rank job applicants based on job descriptions and resumes.")
 st.divider()
@@ -389,7 +400,7 @@ uploaded_files = st.file_uploader(
     accept_multiple_files=True,
     key="resume_uploader"
 )
-
+processed_resumes = []
 if uploaded_files:
     st.info(f"Processing {len(uploaded_files)} resumes...")
 
@@ -408,10 +419,20 @@ if uploaded_files:
         else:
             st.warning(f"Could not extract text from {uploaded_file.name}. Skipping.")
 
-    if processed_resumes:
-        st.success(f"Successfully processed {len(processed_resumes)} resumes.")
-        # Store processed resumes in session state for later use
-        st.session_state.processed_resumes = processed_resumes
+col1,col2,col3 = st.columns(3)
+
+with col1:
+    st.metric("📄 Resumes Uploaded", len(processed_resumes))
+
+with col2:
+    st.metric("🎯 Job Skills Required",
+              len(st.session_state.get("job_relevant_skills",[])))
+
+with col3:
+    st.metric("🏆 Candidates Analyzed",
+              len(processed_resumes))
+# Store processed resumes in session state for later use
+st.session_state.processed_resumes = processed_resumes
 
 # --- Display Candidate Analysis Results ---
 st.markdown("## 📊 Candidate Ranking Results")
@@ -445,13 +466,32 @@ if "processed_resumes" in st.session_state and st.session_state.processed_resume
         })
 
     if all_candidate_rankings:
-        st.subheader("Consolidated Candidate Ranking Table")
+        st.subheader("🏆 Candidate Leaderboard")
         df_rankings = pd.DataFrame(all_candidate_rankings)
         df_rankings['Ranking Score (Numeric)'] = df_rankings['Ranking Score'].astype(float)
         df_rankings = df_rankings.sort_values(by='Ranking Score (Numeric)', ascending=False)
         df_rankings = df_rankings.drop(columns=['Ranking Score (Numeric)'])
+        # 🏆 Best Candidate Banner
+        top_candidate = df_rankings.iloc[0]
 
-        st.dataframe(df_rankings, use_container_width=True)
+        st.success(
+             f"🏆 Best Candidate: {top_candidate['Resume Name']} | "
+             f"Score: {top_candidate['Ranking Score']}"
+        )
+        st.dataframe(
+             df_rankings,
+             use_container_width=True,
+             hide_index=True
+        )
+        st.subheader("📈 Candidate Score Comparison")
+
+        chart_df = df_rankings.copy()
+
+        chart_df["Ranking Score"] = chart_df["Ranking Score"].astype(float)
+
+        st.bar_chart(
+            chart_df.set_index("Resume Name")["Ranking Score"]
+        )
 
         st.subheader("Detailed Analysis for Each Candidate")
         for resume_data_in_expander in st.session_state.processed_resumes:
@@ -472,10 +512,26 @@ if "processed_resumes" in st.session_state and st.session_state.processed_resume
                     st.write(f"**Missing Skills (for desired job):** :red[{', '.join(ranking_result['missing_skills'])}]")
                 else:
                     st.write("**Missing Skills (for desired job):** None :green[All relevant skills found!] ")
-                st.write(f"**Overall Ranking Score:** {ranking_result['ranking_score']:.2f}")
+                score = ranking_result['ranking_score']
+
+                if score >= 0.70:
+                   color = "green"
+                elif score >= 0.40:
+                   color = "orange"
+                else:
+                   color = "red"
+
+                st.markdown(
+                   f"### Overall Ranking Score: :{color}[{score:.2f}]"
+                )
+                st.progress(float(score))
+
     else:
-        st.info("No candidate rankings to display yet. Upload resumes and process the job description.")
+        st.info(
+            "No candidate rankings to display yet. Upload resumes and process the job description."
+        )
 
 else:
-    st.info("Please enter job details, upload resumes, and click 'Process Job Description' to see candidate analysis.")
-
+    st.info(
+        "Please enter job details, upload resumes, and click 'Process Job Description' to see candidate analysis."
+    )
