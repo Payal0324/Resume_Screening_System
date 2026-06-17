@@ -1,6 +1,5 @@
-nltk==3.9.1
+streamlit==1.45.1
 pandas==2.2.2
-pdfplumber
 scikit-learn==1.6.1
-streamlit
-nltk
+pdfplumber==0.11.4
+nltk==3.9.1
