@@ -301,21 +301,18 @@ h1, h2, h3, h4, h5, h6 {
 st.markdown(custom_css, unsafe_allow_html=True)
 
 st.title("AI-Powered Resume Screening and Candidate Ranking System")
-st.markdown("""
-<p style='font-size: 1.1em; color: #ccc;'>
-    This application helps recruiters efficiently screen and rank job applicants based on job descriptions and resumes.
-</p>
-<hr style='border-top: 1px solid #00b0f0;'>
-""")
+st.markdown("---")
+st.markdown("## 📌 About this App")
+st.write("This application helps recruiters efficiently screen and rank job applicants based on job descriptions and resumes.")
+st.divider()
 
-st.sidebar.header("About")
+st.sidebar.markdown("## ℹ️ About")
 st.sidebar.info(
     "This app uses NLP and machine learning to categorize resumes, calculate similarity "
     "to job descriptions, extract skills, and rank candidates. "
-    "Developed by Google Colab AI Agent. "
 )
 
-st.sidebar.header("Deployment Guide")
+st.sidebar.markdown("## 🚀 Deployment Guide")
 st.sidebar.markdown("""
 ### 1. Run Locally
 To run this application on your local machine, follow these steps:
@@ -346,10 +343,20 @@ To deploy this application publicly using Streamlit Cloud, follow these steps:
 
 
 # Main content area for job description input
-st.header("1. Enter Job Description")
+st.markdown("## 📌 Job Description Input")
 
 # Use st.columns for better layout of input fields
-cols1, cols2 = st.columns([2, 1])
+col1, col2 = st.columns([3, 2])
+
+with col1:
+    job_description = st.text_area(
+        "Paste Job Description",
+        height=250
+    )
+
+with col2:
+    desired_job_category = st.text_input("Desired Job Category")
+    job_relevant_skills_input = st.text_area("Relevant Skills (comma-separated)")
 
 with cols1:
     job_description = st.text_area(
@@ -384,7 +391,7 @@ if st.button("Process Job Description", key="process_job_desc_button"):
 
 
 # --- Resume Upload and Processing ---
-st.header("3. Upload Resumes")
+st.markdown("## 📂 Upload Resumes")
 uploaded_files = st.file_uploader(
     "Upload Resumes (PDF or TXT) - Single or Multiple:",
     type=["pdf", "txt"],
@@ -416,7 +423,7 @@ if uploaded_files:
         st.session_state.processed_resumes = processed_resumes
 
 # --- Display Candidate Analysis Results ---
-st.header("4. Candidate Analysis Results")
+st.markdown("## 📊 Candidate Ranking Results")
 
 if "processed_resumes" in st.session_state and st.session_state.processed_resumes and    "job_description" in st.session_state and st.session_state.job_description and    "desired_job_category" in st.session_state and st.session_state.desired_job_category and    "job_relevant_skills" in st.session_state and st.session_state.job_relevant_skills:
 
